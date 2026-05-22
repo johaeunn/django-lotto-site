@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 
+from lotto import views as lotto_views
+
 urlpatterns = [
-    # 나중에 커스텀 관리자 URL은 admin.site.urls보다 위에 둔다.
+    # 커스텀 관리자 페이지는 Django 기본 admin보다 먼저
+    path("admin/draw/", lotto_views.admin_draw, name="admin_draw"),
+
     path("admin/", admin.site.urls),
 
     # Django 기본 로그인/로그아웃 URL

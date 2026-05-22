@@ -2,10 +2,18 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .forms import ManualLottoPurchaseForm
 from .models import Ticket
-from .services import generate_lotto_numbers, get_current_lotto_round, numbers_to_string
+from .models import LottoRound, Ticket
+from .services import (
+    draw_lotto_round,
+    generate_lotto_numbers,
+    get_current_lotto_round,
+    numbers_to_string,
+    string_to_numbers,
+)
 
 
 def home(request):
@@ -25,6 +33,7 @@ def signup(request):
         form = UserCreationForm()
 
     return render(request, "lotto/signup.html", {"form": form})
+
 
 @login_required
 def buy_auto(request):
@@ -47,6 +56,7 @@ def buy_auto(request):
     )
 
     return render(request, "lotto/purchase_done.html", {"ticket": ticket})
+
 
 @login_required
 def buy_manual(request):
@@ -81,6 +91,7 @@ def buy_manual(request):
         },
     )
 
+
 @login_required
 def my_tickets(request):
     """로그인한 사용자의 구매 내역만 조회"""
@@ -92,3 +103,38 @@ def my_tickets(request):
     )
 
     return render(request, "lotto/my_tickets.html", {"tickets": tickets})
+
+
+@staff_member_required
+def admin_draw(request):
+    """관리자가 현재 판매 중인 회차의 추첨을 실행"""
+    current_round = (
+        LottoRound.objects
+        .filter(is_drawn=False)
+        .order_by("-round_number")
+        .first()
+    )
+
+    drawn_round = None
+    winning_numbers = []
+
+    if request.method == "POST":
+        # 판매 중인 회차가 없다면 새 회차를 생성한 뒤 추첨
+        if current_round is None:
+            current_round = get_current_lotto_round()
+
+        drawn_round = draw_lotto_round(current_round)
+        winning_numbers = string_to_numbers(drawn_round.winning_numbers)
+
+        # 추첨 완료 후 다음 구매를 위한 새 회차를 미리 생성
+        get_current_lotto_round()
+
+    return render(
+        request,
+        "lotto/admin_draw.html",
+        {
+            "current_round": current_round,
+            "drawn_round": drawn_round,
+            "winning_numbers": winning_numbers,
+        },
+    )

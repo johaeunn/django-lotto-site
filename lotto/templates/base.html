@@ -12,6 +12,11 @@
             {% if user.is_authenticated %}
                 <span>{{ user.username }}님</span>
 
+                {% if user.is_staff %}
+                    <a href="{% url 'admin_draw' %}">추첨 실행</a>
+                    <a href="/admin/">Django Admin</a>
+                {% endif %}
+
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit">로그아웃</button>

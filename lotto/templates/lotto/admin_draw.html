@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>관리자 추첨 실행</h2>
+
+    {% if current_round %}
+        <p>현재 판매 중인 회차: {{ current_round.round_number }}회차</p>
+    {% else %}
+        <p>현재 판매 중인 회차가 없습니다.</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">추첨 실행</button>
+    </form>
+
+    {% if drawn_round %}
+        <hr>
+
+        <h3>추첨 결과</h3>
+
+        <ul>
+            <li>회차: {{ drawn_round.round_number }}회차</li>
+            <li>
+                당첨 번호:
+                {% for number in winning_numbers %}
+                    {{ number }}
+                {% endfor %}
+            </li>
+            <li>보너스 번호: {{ drawn_round.bonus_number }}</li>
+            <li>추첨 일시: {{ drawn_round.drawn_at }}</li>
+        </ul>
+
+        <p>
+            {{ drawn_round.round_number }}회차 추첨이 완료되었습니다.
+            이후 구매는 다음 회차로 저장됩니다.
+        </p>
+    {% endif %}
+
+    <p>
+        <a href="/admin/">Django Admin으로 이동</a>
+        |
+        <a href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
+    </p>
+{% endblock %}
