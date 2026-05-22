@@ -80,3 +80,15 @@ def buy_manual(request):
             "numbers": lotto_numbers,
         },
     )
+
+@login_required
+def my_tickets(request):
+    """로그인한 사용자의 구매 내역만 조회"""
+    tickets = (
+        Ticket.objects
+        .filter(user=request.user)
+        .select_related("lotto_round")
+        .order_by("-purchased_at")
+    )
+
+    return render(request, "lotto/my_tickets.html", {"tickets": tickets})

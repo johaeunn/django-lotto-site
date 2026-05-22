@@ -12,6 +12,8 @@
 
         <p>
             <a href="{% url 'lotto:buy_manual' %}">수동 로또 구매</a>
+            |
+            <a href="{% url 'lotto:my_tickets' %}">내 구매 내역 확인</a>
         </p>
 
         <form action="{% url 'lotto:buy_auto' %}" method="post">
