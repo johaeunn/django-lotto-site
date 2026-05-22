@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>관리자 대시보드</h2>
+
+    <section>
+        <h3>전체 현황</h3>
+
+        <table border="1" cellpadding="8" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th>전체 판매 복권 수</th>
+                    <td>{{ total_ticket_count }}장</td>
+                </tr>
+                <tr>
+                    <th>전체 회차 수</th>
+                    <td>{{ total_round_count }}개</td>
+                </tr>
+                <tr>
+                    <th>추첨 완료 회차 수</th>
+                    <td>{{ drawn_round_count }}개</td>
+                </tr>
+                <tr>
+                    <th>현재 판매 중인 회차</th>
+                    <td>
+                        {% if current_round %}
+                            {{ current_round.round_number }}회차
+                        {% else %}
+                            없음
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <section>
+        <h3>관리자 기능</h3>
+
+        <ul>
+            <li><a href="/admin/">Django Admin에서 전체 데이터 확인</a></li>
+            <li><a href="{% url 'admin_draw' %}">추첨 실행</a></li>
+        </ul>
+    </section>
+
+    <hr>
+
+    <section>
+        <h3>최근 구매 내역</h3>
+
+        {% if recent_tickets %}
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>구매자</th>
+                        <th>회차</th>
+                        <th>구매 번호</th>
+                        <th>구매 방식</th>
+                        <th>구매 일시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in recent_tickets %}
+                        <tr>
+                            <td>{{ ticket.user.username }}</td>
+                            <td>{{ ticket.lotto_round.round_number }}회차</td>
+                            <td>{{ ticket.numbers }}</td>
+                            <td>{{ ticket.get_purchase_type_display }}</td>
+                            <td>{{ ticket.purchased_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>아직 판매된 복권이 없습니다.</p>
+        {% endif %}
+    </section>
+
+    <p>
+        <a href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
+    </p>
+{% endblock %}

@@ -108,6 +108,21 @@ def my_tickets(request):
     return render(request, "lotto/my_tickets.html", {"tickets": tickets})
 
 
+@login_required
+def results(request):
+    """추첨 완료된 복권의 당첨 결과를 따로 조회"""
+    tickets = (
+        Ticket.objects
+        .filter(user=request.user, lotto_round__is_drawn=True)
+        .select_related("lotto_round")
+        .order_by("-lotto_round__round_number", "-purchased_at")
+    )
+
+    tickets = attach_results_to_tickets(tickets)
+
+    return render(request, "lotto/results.html", {"tickets": tickets})
+
+
 @staff_member_required
 def admin_draw(request):
     """관리자가 현재 판매 중인 회차의 추첨을 실행"""
@@ -143,16 +158,32 @@ def admin_draw(request):
     )
 
 
-@login_required
-def results(request):
-    """추첨 완료된 복권의 당첨 결과를 따로 조회"""
-    tickets = (
-        Ticket.objects
-        .filter(user=request.user, lotto_round__is_drawn=True)
-        .select_related("lotto_round")
-        .order_by("-lotto_round__round_number", "-purchased_at")
+@staff_member_required
+def admin_dashboard(request):
+    """관리자용 전체 현황 대시보드를 표시"""
+    total_ticket_count = Ticket.objects.count()
+    total_round_count = LottoRound.objects.count()
+    drawn_round_count = LottoRound.objects.filter(is_drawn=True).count()
+
+    current_round = (
+        LottoRound.objects
+        .filter(is_drawn=False)
+        .order_by("-round_number")
+        .first()
     )
 
-    tickets = attach_results_to_tickets(tickets)
+    recent_tickets = (
+        Ticket.objects
+        .select_related("user", "lotto_round")
+        .order_by("-purchased_at")[:10]
+    )
 
-    return render(request, "lotto/results.html", {"tickets": tickets})
+    context = {
+        "total_ticket_count": total_ticket_count,
+        "total_round_count": total_round_count,
+        "drawn_round_count": drawn_round_count,
+        "current_round": current_round,
+        "recent_tickets": recent_tickets,
+    }
+
+    return render(request, "lotto/admin_dashboard.html", context)
