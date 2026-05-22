@@ -11,6 +11,7 @@
                     <th>구매 번호</th>
                     <th>구매 방식</th>
                     <th>구매 일시</th>
+                    <th>당첨 결과</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,6 +21,19 @@
                         <td>{{ ticket.numbers }}</td>
                         <td>{{ ticket.get_purchase_type_display }}</td>
                         <td>{{ ticket.purchased_at }}</td>
+                        <td>
+                            {{ ticket.result.display }}
+
+                            {% if ticket.result.status == "drawn" %}
+                                <br>
+                                <small>
+                                    일치 번호: {{ ticket.result.matched_count }}개
+                                    {% if ticket.result.matched_bonus %}
+                                        / 보너스 일치
+                                    {% endif %}
+                                </small>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -29,6 +43,8 @@
     {% endif %}
 
     <p>
+        <a href="{% url 'lotto:results' %}">당첨 결과 확인 페이지로 이동</a>
+        |
         <a href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
     </p>
 {% endblock %}

@@ -76,3 +76,85 @@ def draw_lotto_round(lotto_round):
     lotto_round.save()
 
     return lotto_round
+
+
+def calculate_rank(ticket_numbers, winning_numbers, bonus_number):
+    """구매 번호와 당첨 번호를 비교해 등수를 계산"""
+    ticket_set = set(ticket_numbers)
+    winning_set = set(winning_numbers)
+
+    matched_count = len(ticket_set & winning_set)
+    matched_bonus = bonus_number in ticket_set if bonus_number else False
+
+    if matched_count == 6:
+        rank = 1
+    elif matched_count == 5 and matched_bonus:
+        rank = 2
+    elif matched_count == 5:
+        rank = 3
+    elif matched_count == 4:
+        rank = 4
+    elif matched_count == 3:
+        rank = 5
+    else:
+        rank = 0
+
+    return {
+        "rank": rank,
+        "matched_count": matched_count,
+        "matched_bonus": matched_bonus,
+    }
+
+
+def get_rank_display(rank):
+    """등수 숫자를 화면 표시용 문자열로 변환"""
+    if rank == 0:
+        return "낙첨"
+
+    return f"{rank}등"
+
+
+def get_ticket_result(ticket):
+    """
+    복권 한 장의 당첨 결과를 계산
+    추첨 전 회차라면 결과 대신 '추첨 전' 상태를 반환
+    """
+    lotto_round = ticket.lotto_round
+
+    if not lotto_round.is_drawn:
+        return {
+            "status": "pending",
+            "display": "추첨 전",
+            "rank": None,
+            "matched_count": None,
+            "matched_bonus": None,
+            "winning_numbers": [],
+            "bonus_number": None,
+        }
+
+    ticket_numbers = string_to_numbers(ticket.numbers)
+    winning_numbers = string_to_numbers(lotto_round.winning_numbers)
+
+    result = calculate_rank(
+        ticket_numbers=ticket_numbers,
+        winning_numbers=winning_numbers,
+        bonus_number=lotto_round.bonus_number,
+    )
+
+    return {
+        "status": "drawn",
+        "display": get_rank_display(result["rank"]),
+        "rank": result["rank"],
+        "matched_count": result["matched_count"],
+        "matched_bonus": result["matched_bonus"],
+        "winning_numbers": winning_numbers,
+        "bonus_number": lotto_round.bonus_number,
+    }
+
+
+def attach_results_to_tickets(tickets):
+    """템플릿에서 사용하기 쉽도록 각 Ticket 객체에 result 속성 추가"""
+    for ticket in tickets:
+        ticket.result = get_ticket_result(ticket)
+
+    return tickets

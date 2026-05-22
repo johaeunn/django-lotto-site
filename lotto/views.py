@@ -8,6 +8,7 @@ from .forms import ManualLottoPurchaseForm
 from .models import Ticket
 from .models import LottoRound, Ticket
 from .services import (
+    attach_results_to_tickets,
     draw_lotto_round,
     generate_lotto_numbers,
     get_current_lotto_round,
@@ -94,13 +95,15 @@ def buy_manual(request):
 
 @login_required
 def my_tickets(request):
-    """로그인한 사용자의 구매 내역만 조회"""
+    """로그인한 사용자의 구매 내역과 당첨 결과를 조회"""
     tickets = (
         Ticket.objects
         .filter(user=request.user)
         .select_related("lotto_round")
         .order_by("-purchased_at")
     )
+
+    tickets = attach_results_to_tickets(tickets)
 
     return render(request, "lotto/my_tickets.html", {"tickets": tickets})
 
@@ -138,3 +141,18 @@ def admin_draw(request):
             "winning_numbers": winning_numbers,
         },
     )
+
+
+@login_required
+def results(request):
+    """추첨 완료된 복권의 당첨 결과를 따로 조회"""
+    tickets = (
+        Ticket.objects
+        .filter(user=request.user, lotto_round__is_drawn=True)
+        .select_related("lotto_round")
+        .order_by("-lotto_round__round_number", "-purchased_at")
+    )
+
+    tickets = attach_results_to_tickets(tickets)
+
+    return render(request, "lotto/results.html", {"tickets": tickets})
