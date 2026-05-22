@@ -11,8 +11,9 @@ def generate_lotto_numbers():
 
 
 def numbers_to_string(numbers):
-    """숫자 리스트를 DB 저장용 문자열로 변환"""
-    return ",".join(map(str, numbers))
+    """숫자 리스트를 정렬한 뒤 DB 저장용 문자열로 변환"""
+    sorted_numbers = sorted(numbers)
+    return ",".join(map(str, sorted_numbers))
 
 
 def get_current_lotto_round():

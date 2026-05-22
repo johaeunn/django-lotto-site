@@ -10,6 +10,10 @@
 
         <h3>로또 구매</h3>
 
+        <p>
+            <a href="{% url 'lotto:buy_manual' %}">수동 로또 구매</a>
+        </p>
+
         <form action="{% url 'lotto:buy_auto' %}" method="post">
             {% csrf_token %}
             <button type="submit">자동 로또 구매</button>

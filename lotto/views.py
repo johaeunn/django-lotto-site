@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
 
+from .forms import ManualLottoPurchaseForm
 from .models import Ticket
 from .services import generate_lotto_numbers, get_current_lotto_round, numbers_to_string
 
@@ -46,3 +47,36 @@ def buy_auto(request):
     )
 
     return render(request, "lotto/purchase_done.html", {"ticket": ticket})
+
+@login_required
+def buy_manual(request):
+    """사용자가 직접 선택한 번호로 로또를 구매한다."""
+    lotto_numbers = range(1, 46)
+
+    if request.method == "POST":
+        form = ManualLottoPurchaseForm(request.POST)
+
+        if form.is_valid():
+            lotto_round = get_current_lotto_round()
+            numbers = form.cleaned_data["numbers"]
+            numbers_text = numbers_to_string(numbers)
+
+            ticket = Ticket.objects.create(
+                user=request.user,
+                lotto_round=lotto_round,
+                numbers=numbers_text,
+                purchase_type=Ticket.PURCHASE_TYPE_MANUAL,
+            )
+
+            return render(request, "lotto/purchase_done.html", {"ticket": ticket})
+    else:
+        form = ManualLottoPurchaseForm()
+
+    return render(
+        request,
+        "lotto/buy_manual.html",
+        {
+            "form": form,
+            "numbers": lotto_numbers,
+        },
+    )
