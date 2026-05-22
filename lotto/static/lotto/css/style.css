@@ -347,3 +347,82 @@ small {
     color: #ffffff;
 }
 
+.lotto-ball-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.lotto-ball {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #eef2e5;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.lotto-ball.matched {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.lotto-ball.bonus {
+    background-color: #f1c75b;
+    color: #2f2a12;
+    border-color: #e0b642;
+}
+
+.lotto-ball.winning {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    border-color: var(--primary);
+}
+
+.result-note {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 12px 0 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-ball {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-ball.default {
+    background-color: #eef2e5;
+    border: 1px solid var(--border);
+}
+
+.legend-ball.matched {
+    background-color: var(--primary);
+}
+
+.legend-ball.bonus {
+    background-color: #f1c75b;
+}

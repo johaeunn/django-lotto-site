@@ -120,6 +120,7 @@ def get_ticket_result(ticket):
     추첨 전 회차라면 결과 대신 '추첨 전' 상태를 반환
     """
     lotto_round = ticket.lotto_round
+    ticket_numbers = string_to_numbers(ticket.numbers)
 
     if not lotto_round.is_drawn:
         return {
@@ -128,11 +129,12 @@ def get_ticket_result(ticket):
             "rank": None,
             "matched_count": None,
             "matched_bonus": None,
+            "ticket_numbers": ticket_numbers,
             "winning_numbers": [],
+            "matched_winning_numbers": [],
             "bonus_number": None,
         }
 
-    ticket_numbers = string_to_numbers(ticket.numbers)
     winning_numbers = string_to_numbers(lotto_round.winning_numbers)
 
     result = calculate_rank(
@@ -141,13 +143,17 @@ def get_ticket_result(ticket):
         bonus_number=lotto_round.bonus_number,
     )
 
+    matched_winning_numbers = sorted(set(ticket_numbers) & set(winning_numbers))
+
     return {
         "status": "drawn",
         "display": get_rank_display(result["rank"]),
         "rank": result["rank"],
         "matched_count": result["matched_count"],
         "matched_bonus": result["matched_bonus"],
+        "ticket_numbers": ticket_numbers,
         "winning_numbers": winning_numbers,
+        "matched_winning_numbers": matched_winning_numbers,
         "bonus_number": lotto_round.bonus_number,
     }
 

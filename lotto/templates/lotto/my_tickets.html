@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>내 구매 내역</h2>
+    <h2 class="page-title">내 구매 내역</h2>
+    <p class="page-description">구매한 복권 목록과 당첨 결과를 확인합니다.</p>
+
+    <div class="legend-row">
+        <span class="legend-item">
+            <span class="legend-ball matched"></span>
+            당첨번호 일치
+        </span>
+        <span class="legend-item">
+            <span class="legend-ball bonus"></span>
+            보너스번호 일치
+        </span>
+        <span class="legend-item">
+            <span class="legend-ball default"></span>
+            미일치 또는 추첨 전
+        </span>
+    </div>
 
     {% if tickets %}
         <div class="table-wrap">
@@ -19,20 +35,35 @@
                     {% for ticket in tickets %}
                         <tr>
                             <td>{{ ticket.lotto_round.round_number }}회차</td>
-                            <td>{{ ticket.numbers }}</td>
+
+                            <td>
+                                <div class="lotto-ball-row">
+                                    {% for number in ticket.result.ticket_numbers %}
+                                        {% if ticket.result.status == "drawn" and number in ticket.result.matched_winning_numbers %}
+                                            <span class="lotto-ball matched">{{ number }}</span>
+                                        {% elif ticket.result.status == "drawn" and ticket.result.matched_bonus and number == ticket.result.bonus_number %}
+                                            <span class="lotto-ball bonus">{{ number }}</span>
+                                        {% else %}
+                                            <span class="lotto-ball">{{ number }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </td>
+
                             <td>{{ ticket.get_purchase_type_display }}</td>
                             <td>{{ ticket.purchased_at }}</td>
-                            <td>
-                                {{ ticket.result.display }}
 
+                            <td>
                                 {% if ticket.result.status == "drawn" %}
-                                    <br>
-                                    <small>
+                                    <span class="status-badge">{{ ticket.result.display }}</span>
+                                    <div class="result-note">
                                         일치 번호: {{ ticket.result.matched_count }}개
                                         {% if ticket.result.matched_bonus %}
                                             / 보너스 일치
                                         {% endif %}
-                                    </small>
+                                    </div>
+                                {% else %}
+                                    <span class="status-badge status-muted">추첨 전</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -44,9 +75,8 @@
         <p>아직 구매한 로또가 없습니다.</p>
     {% endif %}
 
-    <p>
-        <a href="{% url 'lotto:results' %}">당첨 결과 확인 페이지로 이동</a>
-        |
-        <a href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
+    <p class="link-row">
+        <a class="button-secondary" href="{% url 'lotto:results' %}">당첨 결과 확인 페이지로 이동</a>
+        <a class="button-secondary" href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
     </p>
 {% endblock %}

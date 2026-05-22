@@ -1,9 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>당첨 결과 확인</h2>
+    <h2 class="page-title">당첨 결과 확인</h2>
+    <p class="page-description">추첨이 완료된 복권의 당첨 결과만 표시합니다.</p>
 
-    <p>추첨이 완료된 복권의 당첨 결과만 표시합니다.</p>
+    <div class="legend-row">
+        <span class="legend-item">
+            <span class="legend-ball matched"></span>
+            당첨번호 일치
+        </span>
+        <span class="legend-item">
+            <span class="legend-ball bonus"></span>
+            보너스번호 일치
+        </span>
+        <span class="legend-item">
+            <span class="legend-ball default"></span>
+            미일치
+        </span>
+    </div>
 
     {% if tickets %}
         <div class="table-wrap">
@@ -22,20 +36,43 @@
                     {% for ticket in tickets %}
                         <tr>
                             <td>{{ ticket.lotto_round.round_number }}회차</td>
-                            <td>{{ ticket.numbers }}</td>
+
                             <td>
-                                {% for number in ticket.result.winning_numbers %}
-                                    {{ number }}
-                                {% endfor %}
+                                <div class="lotto-ball-row">
+                                    {% for number in ticket.result.ticket_numbers %}
+                                        {% if number in ticket.result.matched_winning_numbers %}
+                                            <span class="lotto-ball matched">{{ number }}</span>
+                                        {% elif ticket.result.matched_bonus and number == ticket.result.bonus_number %}
+                                            <span class="lotto-ball bonus">{{ number }}</span>
+                                        {% else %}
+                                            <span class="lotto-ball">{{ number }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </td>
-                            <td>{{ ticket.result.bonus_number }}</td>
+
+                            <td>
+                                <div class="lotto-ball-row">
+                                    {% for number in ticket.result.winning_numbers %}
+                                        <span class="lotto-ball winning">{{ number }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="lotto-ball bonus">{{ ticket.result.bonus_number }}</span>
+                            </td>
+
                             <td>
                                 {{ ticket.result.matched_count }}개
                                 {% if ticket.result.matched_bonus %}
-                                    / 보너스 일치
+                                    <div class="result-note">보너스 번호 일치</div>
                                 {% endif %}
                             </td>
-                            <td>{{ ticket.result.display }}</td>
+
+                            <td>
+                                <span class="status-badge">{{ ticket.result.display }}</span>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -45,9 +82,8 @@
         <p>아직 추첨이 완료된 복권이 없습니다.</p>
     {% endif %}
 
-    <p>
-        <a href="{% url 'lotto:my_tickets' %}">내 구매 내역으로 이동</a>
-        |
-        <a href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
+    <p class="link-row">
+        <a class="button-secondary" href="{% url 'lotto:my_tickets' %}">내 구매 내역으로 이동</a>
+        <a class="button-secondary" href="{% url 'lotto:home' %}">메인으로 돌아가기</a>
     </p>
 {% endblock %}
