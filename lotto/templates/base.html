@@ -1,42 +1,53 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>6/45 Lotto</title>
+    <link rel="stylesheet" href="{% static 'lotto/css/style.css' %}">
 </head>
 <body>
-    <header>
-        <h1><a href="{% url 'lotto:home' %}">6/45 Lotto</a></h1>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="logo" href="{% url 'lotto:home' %}">6/45 Lotto</a>
 
-        <nav>
+            <nav class="nav">
             {% if user.is_authenticated %}
-                <span>{{ user.username }}님</span>
+                <span class="nav-user">{{ user.username }}님</span>
 
                 {% if user.is_staff %}
                     <a href="{% url 'admin_dashboard' %}">관리자 대시보드</a>
                     <a href="{% url 'admin_draw' %}">추첨 실행</a>
                     <a href="{% url 'admin_results' %}">판매/당첨 통계</a>
                     <a href="/admin/">Django Admin</a>
+                {% else %}
+                    <a href="{% url 'lotto:my_tickets' %}">내 구매 내역</a>
+                    <a href="{% url 'lotto:results' %}">당첨 결과</a>
                 {% endif %}
 
-                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                <!-- 로그아웃은 상태 변경 요청이므로 POST 방식으로 처리한다. -->
+                <form action="{% url 'logout' %}" method="post" class="inline-form">
                     {% csrf_token %}
-                    <button type="submit">로그아웃</button>
+                    <button type="submit" class="button-secondary">로그아웃</button>
                 </form>
             {% else %}
                 <a href="{% url 'login' %}">로그인</a>
-                <a href="{% url 'lotto:signup' %}">회원가입</a>
+                <a href="{% url 'lotto:signup' %}" class="button-secondary">회원가입</a>
             {% endif %}
-
-            <a href="/admin/">관리자</a>
         </nav>
+        </div>
     </header>
 
-    <hr>
-
-    <main>
-        {% block content %}
-        {% endblock %}
+    <main class="container">
+        <div class="card">
+            {% block content %}
+            {% endblock %}
+        </div>
     </main>
+
+    <footer class="footer">
+        <p>Open Source Software Basic · Django Docker Lotto Project</p>
+    </footer>
 </body>
 </html>

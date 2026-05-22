@@ -1,34 +1,58 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>메인 페이지</h2>
-
-    <p>Django와 Docker를 활용한 6/45 로또 웹 사이트입니다.</p>
+    <h2 class="page-title">6/45 로또 웹 사이트</h2>
+    <p class="page-description">
+        Django와 Docker를 활용해 구현한 로또 구매 및 추첨 서비스입니다.
+    </p>
 
     {% if user.is_authenticated %}
-        <p>{{ user.username }}님, 환영합니다.</p>
+        {% if user.is_staff %}
+            <section class="section">
+                <h3 class="section-title">관리자 메뉴</h3>
+                <p>
+                    관리자 계정으로 로그인했습니다. 로또 구매 기능 대신 운영 기능을 사용할 수 있습니다.
+                </p>
 
-        <h3>로또 구매</h3>
+                <div class="admin-action-grid">
+                    <a class="admin-action-button primary" href="{% url 'admin_dashboard' %}">관리자 대시보드</a>
+                    <a class="admin-action-button" href="{% url 'admin_draw' %}">추첨 실행</a>
+                    <a class="admin-action-button" href="{% url 'admin_results' %}">판매/당첨 통계</a>
+                    <a class="admin-action-button" href="/admin/">Django Admin</a>
+                </div>
+            </section>
+        {% else %}
+            <section class="section">
+                <h3 class="section-title">로또 구매</h3>
 
-        <p>
-            <a href="{% url 'lotto:buy_manual' %}">수동 로또 구매</a>
-            |
-            <a href="{% url 'lotto:my_tickets' %}">내 구매 내역 확인</a>
-            |
-            <a href="{% url 'lotto:results' %}">당첨 결과 확인</a>
-        </p>
+                <div class="link-row">
+                    <a class="button" href="{% url 'lotto:buy_manual' %}">수동 로또 구매</a>
 
-        <form action="{% url 'lotto:buy_auto' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">자동 로또 구매</button>
-        </form>
+                    <!-- 자동 구매는 DB에 데이터를 생성하므로 POST 방식으로 요청한다. -->
+                    <form action="{% url 'lotto:buy_auto' %}" method="post" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit">자동 로또 구매</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="section">
+                <h3 class="section-title">나의 로또</h3>
+
+                <div class="link-row">
+                    <a class="button-secondary" href="{% url 'lotto:my_tickets' %}">내 구매 내역 확인</a>
+                    <a class="button-secondary" href="{% url 'lotto:results' %}">당첨 결과 확인</a>
+                </div>
+            </section>
+        {% endif %}
     {% else %}
-        <p>로또 구매 기능을 사용하려면 로그인 또는 회원가입을 해주세요.</p>
+        <section class="section">
+            <p>로또 구매 기능을 사용하려면 로그인 또는 회원가입을 해주세요.</p>
 
-        <p>
-            <a href="{% url 'login' %}">로그인</a>
-            |
-            <a href="{% url 'lotto:signup' %}">회원가입</a>
-        </p>
+            <div class="link-row">
+                <a class="button" href="{% url 'login' %}">로그인</a>
+                <a class="button-secondary" href="{% url 'lotto:signup' %}">회원가입</a>
+            </div>
+        </section>
     {% endif %}
 {% endblock %}

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.views import LoginView
 
 from .forms import ManualLottoPurchaseForm
 from .models import Ticket
@@ -20,6 +21,18 @@ from .services import (
 
 def home(request):
     return render(request, "lotto/home.html")
+
+
+class CustomLoginView(LoginView):
+    """사용자 유형에 따라 로그인 후 이동할 페이지를 다르게 설정"""
+
+    template_name = "registration/login.html"
+
+    def get_success_url(self):
+        if self.request.user.is_staff:
+            return "/admin/dashboard/"
+
+        return "/"
 
 
 def signup(request):

@@ -1,0 +1,349 @@
+:root {
+    --primary: #a1bd5a;
+    --primary-dark: #7f9842;
+    --primary-light: #edf4dc;
+    --primary-soft: #f6f9ee;
+    --text-main: #26321f;
+    --text-muted: #6b735f;
+    --border: #dfe7cc;
+    --background: #f8faf3;
+    --card: #ffffff;
+    --danger: #d9534f;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: var(--background);
+    color: var(--text-main);
+    font-family: Arial, "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.site-header {
+    background-color: var(--card);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(38, 50, 31, 0.06);
+}
+
+.header-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    color: var(--text-main);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.nav-user {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1080px;
+    margin: 32px auto;
+    padding: 0 24px;
+}
+
+.card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 8px 20px rgba(38, 50, 31, 0.06);
+}
+
+.page-title {
+    margin: 0 0 12px;
+    font-size: 28px;
+}
+
+.page-description {
+    margin-top: 0;
+    color: var(--text-muted);
+}
+
+.section {
+    margin-top: 28px;
+}
+
+.section-title {
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.button,
+.button-secondary,
+.button-outline,
+button {
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.button:hover,
+.button-secondary:hover,
+.button-outline:hover,
+button:hover {
+    background-color: var(--primary-dark);
+    text-decoration: none;
+}
+
+.button-secondary {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.button-secondary:hover {
+    background-color: #dfecc2;
+    color: var(--primary-dark);
+}
+
+.button-outline {
+    background-color: #ffffff;
+    color: var(--primary-dark);
+    border: 1px solid var(--primary);
+}
+
+.button-outline:hover {
+    background-color: var(--primary-soft);
+    color: var(--primary-dark);
+}
+
+.inline-form {
+    display: inline;
+}
+
+.link-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background-color: var(--primary-light);
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: #ffffff;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: 2px solid var(--primary-light);
+    border-color: var(--primary);
+}
+
+.help-text,
+small {
+    color: var(--text-muted);
+}
+
+.error,
+.errorlist {
+    color: var(--danger);
+}
+
+.status-badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 4px 10px;
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.status-muted {
+    background-color: #eeeeee;
+    color: #666666;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.stat-card {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background-color: var(--primary-soft);
+}
+
+.stat-label {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.stat-value {
+    margin: 6px 0 0;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.lotto-number-board {
+    display: grid;
+    grid-template-columns: repeat(9, 44px);
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.lotto-number-button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: var(--text-main);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.lotto-number-button.selected {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.lotto-number-button:disabled {
+    background-color: #eeeeee;
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.footer {
+    max-width: 1080px;
+    margin: 48px auto 24px;
+    padding: 0 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+@media (max-width: 640px) {
+    .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .lotto-number-board {
+        grid-template-columns: repeat(5, 44px);
+    }
+}
+
+.admin-action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.admin-action-button {
+    display: block;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background-color: var(--primary-soft);
+    color: var(--text-main);
+    font-weight: 800;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(38, 50, 31, 0.05);
+}
+
+.admin-action-button:hover {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    text-decoration: none;
+}
+
+.admin-action-button.primary {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.admin-action-button.primary:hover {
+    background-color: var(--primary-dark);
+    color: #ffffff;
+}
+

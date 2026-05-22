@@ -11,6 +11,9 @@ urlpatterns = [
 
     path("admin/", admin.site.urls),
 
+    # 기본 login 대신 커스텀 로그인 view를 사용
+    path("login/", lotto_views.CustomLoginView.as_view(), name="login"),
+
     # Django 기본 로그인/로그아웃 URL
     path("", include("django.contrib.auth.urls")),
 

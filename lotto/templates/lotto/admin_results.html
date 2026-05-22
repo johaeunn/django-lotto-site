@@ -26,67 +26,69 @@
         <h3>회차별 통계</h3>
 
         {% if round_statistics %}
-            <table border="1" cellpadding="8" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>회차</th>
-                        <th>추첨 상태</th>
-                        <th>당첨 번호</th>
-                        <th>보너스 번호</th>
-                        <th>판매 수</th>
-                        <th>1등</th>
-                        <th>2등</th>
-                        <th>3등</th>
-                        <th>4등</th>
-                        <th>5등</th>
-                        <th>낙첨</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in round_statistics %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ item.round.round_number }}회차</td>
-
-                            <td>
-                                {% if item.round.is_drawn %}
-                                    추첨 완료
-                                {% else %}
-                                    판매 중
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if item.round.winning_numbers %}
-                                    {{ item.round.winning_numbers }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if item.round.bonus_number %}
-                                    {{ item.round.bonus_number }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>{{ item.ticket_count }}장</td>
-
-                            {% if item.round.is_drawn %}
-                                <td>{{ item.rank_1_count }}장</td>
-                                <td>{{ item.rank_2_count }}장</td>
-                                <td>{{ item.rank_3_count }}장</td>
-                                <td>{{ item.rank_4_count }}장</td>
-                                <td>{{ item.rank_5_count }}장</td>
-                                <td>{{ item.losing_count }}장</td>
-                            {% else %}
-                                <td colspan="6">추첨 전</td>
-                            {% endif %}
+                            <th>회차</th>
+                            <th>추첨 상태</th>
+                            <th>당첨 번호</th>
+                            <th>보너스 번호</th>
+                            <th>판매 수</th>
+                            <th>1등</th>
+                            <th>2등</th>
+                            <th>3등</th>
+                            <th>4등</th>
+                            <th>5등</th>
+                            <th>낙첨</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for item in round_statistics %}
+                            <tr>
+                                <td>{{ item.round.round_number }}회차</td>
+
+                                <td>
+                                    {% if item.round.is_drawn %}
+                                        추첨 완료
+                                    {% else %}
+                                        판매 중
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if item.round.winning_numbers %}
+                                        {{ item.round.winning_numbers }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if item.round.bonus_number %}
+                                        {{ item.round.bonus_number }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ item.ticket_count }}장</td>
+
+                                {% if item.round.is_drawn %}
+                                    <td>{{ item.rank_1_count }}장</td>
+                                    <td>{{ item.rank_2_count }}장</td>
+                                    <td>{{ item.rank_3_count }}장</td>
+                                    <td>{{ item.rank_4_count }}장</td>
+                                    <td>{{ item.rank_5_count }}장</td>
+                                    <td>{{ item.losing_count }}장</td>
+                                {% else %}
+                                    <td colspan="6">추첨 전</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <p>아직 생성된 회차가 없습니다.</p>
         {% endif %}
