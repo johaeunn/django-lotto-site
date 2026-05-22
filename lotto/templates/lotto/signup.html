@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>회원가입</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label for="{{ form.username.id_for_label }}">아이디</label><br>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <br>
+                <span style="color: red;">{{ form.username.errors }}</span>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password1.id_for_label }}">비밀번호</label><br>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <br>
+                <span style="color: red;">{{ form.password1.errors }}</span>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password2.id_for_label }}">비밀번호 확인</label><br>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <br>
+                <span style="color: red;">{{ form.password2.errors }}</span>
+            {% endif %}
+        </p>
+
+        <button type="submit">회원가입</button>
+    </form>
+
+    <p>
+        이미 계정이 있나요?
+        <a href="{% url 'login' %}">로그인</a>
+    </p>
+{% endblock %}
