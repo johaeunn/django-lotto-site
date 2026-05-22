@@ -11,6 +11,7 @@ from .services import (
     attach_results_to_tickets,
     draw_lotto_round,
     generate_lotto_numbers,
+    get_all_round_statistics,
     get_current_lotto_round,
     numbers_to_string,
     string_to_numbers,
@@ -187,3 +188,20 @@ def admin_dashboard(request):
     }
 
     return render(request, "lotto/admin_dashboard.html", context)
+
+
+@staff_member_required
+def admin_results(request):
+    """관리자용 판매/당첨 통계 페이지를 표시"""
+    round_statistics = get_all_round_statistics()
+
+    total_ticket_count = Ticket.objects.count()
+    total_drawn_round_count = LottoRound.objects.filter(is_drawn=True).count()
+
+    context = {
+        "round_statistics": round_statistics,
+        "total_ticket_count": total_ticket_count,
+        "total_drawn_round_count": total_drawn_round_count,
+    }
+
+    return render(request, "lotto/admin_results.html", context)

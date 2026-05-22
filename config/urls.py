@@ -7,6 +7,7 @@ urlpatterns = [
     # 커스텀 관리자 페이지는 Django 기본 admin보다 먼저
     path("admin/dashboard/", lotto_views.admin_dashboard, name="admin_dashboard"),
     path("admin/draw/", lotto_views.admin_draw, name="admin_draw"),
+    path("admin/results/", lotto_views.admin_results, name="admin_results"),
 
     path("admin/", admin.site.urls),
 

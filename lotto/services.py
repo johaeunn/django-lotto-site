@@ -158,3 +158,54 @@ def attach_results_to_tickets(tickets):
         ticket.result = get_ticket_result(ticket)
 
     return tickets
+
+def get_round_statistics(lotto_round):
+    """특정 회차의 판매 수와 등수별 당첨 통계를 계산."""
+    tickets = (
+        lotto_round.tickets
+        .select_related("user", "lotto_round")
+        .order_by("-purchased_at")
+    )
+
+    rank_counts = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        0: 0,
+    }
+
+    for ticket in tickets:
+        result = get_ticket_result(ticket)
+
+        # 추첨 전 회차는 등수 계산 대상에서 제외
+        if result["status"] != "drawn":
+            continue
+
+        rank_counts[result["rank"]] += 1
+
+    return {
+        "round": lotto_round,
+        "ticket_count": tickets.count(),
+        "rank_1_count": rank_counts[1],
+        "rank_2_count": rank_counts[2],
+        "rank_3_count": rank_counts[3],
+        "rank_4_count": rank_counts[4],
+        "rank_5_count": rank_counts[5],
+        "losing_count": rank_counts[0],
+    }
+
+
+def get_all_round_statistics():
+    """전체 회차의 판매/당첨 통계를 최신 회차 순으로 계산"""
+    lotto_rounds = (
+        LottoRound.objects
+        .prefetch_related("tickets")
+        .order_by("-round_number")
+    )
+
+    return [
+        get_round_statistics(lotto_round)
+        for lotto_round in lotto_rounds
+    ]

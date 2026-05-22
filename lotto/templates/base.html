@@ -15,6 +15,7 @@
                 {% if user.is_staff %}
                     <a href="{% url 'admin_dashboard' %}">관리자 대시보드</a>
                     <a href="{% url 'admin_draw' %}">추첨 실행</a>
+                    <a href="{% url 'admin_results' %}">판매/당첨 통계</a>
                     <a href="/admin/">Django Admin</a>
                 {% endif %}
 
