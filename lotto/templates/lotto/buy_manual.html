@@ -8,7 +8,7 @@
         {% csrf_token %}
 
         <!-- 선택된 번호를 서버로 보내기 위한 숨겨진 입력값 -->
-        <input type="hidden" name="numbers" id="selected-numbers-input">
+        {{ form.numbers }}
 
         <div class="lotto-number-board">
             {% for number in numbers %}
